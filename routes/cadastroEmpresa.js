@@ -27,7 +27,7 @@ router.post('/', (req, res, next) => {
                 }
 
                 res.status(201).send({
-                    mensagem: 'Solicitacao enviada!'
+                    mensagem: 'Empresa cadastrada com sucesso!'
                 })
             }
         )
