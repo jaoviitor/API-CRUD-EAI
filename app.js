@@ -3,14 +3,14 @@ const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 
-const rotaCadastroEmpresa = require('./routes/cadastroEmpresa');
+const rotaEmpresa = require('./routes/empresa');
 const rotaPedidos = require('./routes/pedidos')
 
 app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false})); // apenas dados simples
 app.use(bodyParser.json()); // json de entrada no body
 
-app.use('/cadastroEmpresa', rotaCadastroEmpresa);
+app.use('/empresa', rotaEmpresa);
 app.use('/pedidos', rotaPedidos);
 
 //TRATAMENTO PARA QUANDO NÃO FOR ENCONTRADO UMA ROTA
