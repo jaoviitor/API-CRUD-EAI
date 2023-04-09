@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const rotaEmpresa = require('./routes/empresa');
 const rotaPedidos = require('./routes/pedidos');
 const rotaCadastroClientes = require('./routes/cadastro_cliente');
+const rotaLoginClientes = require('./routes/login_cliente');
 
 app.use(cors());
 app.use(morgan('dev'));
@@ -16,6 +17,7 @@ app.use(bodyParser.json()); // json de entrada no body
 app.use('/empresa', rotaEmpresa);
 app.use('/pedidos', rotaPedidos);
 app.use('/cadastro', rotaCadastroClientes);
+app.use('/login', rotaLoginClientes);
 
 //TRATAMENTO PARA QUANDO NÃO FOR ENCONTRADO UMA ROTA
 app.use((req, res, next) =>{
