@@ -32,4 +32,21 @@ router.post('/', (req, res, next) => {
     })
 });
 
+router.patch('/:id_cliente', (req, res, next) => {
+    mysql.getConnection((error, conn) =>{
+        if(error){ return res.status(500).send({ error: error }) };
+        conn.query(
+            'UPDATE Cadastro_clientes SET Nome = ?, Email = ?, Telefone = ?, Senha = ? WHERE Id_cliente = ?',
+            [req.body.nome, req.body.email, req.body.telefone, req.body.senha, req.params.id_cliente],
+            (error, resultado, fields) => {
+                conn.release();
+                if(error){ return res.status(500).send({ error: error }) };
+                res.status(202).send({
+                    mensagem: 'Cliente atualizado com sucesso!',
+                });
+            }
+        )
+    })
+});
+
 module.exports = router;
