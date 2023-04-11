@@ -18,11 +18,8 @@ app.use(bodyParser.json()); // json de entrada no body
 app.use('/empresa', rotaEmpresa);
 app.use('/pedidos', rotaPedidos);
 app.use('/cadastro', rotaCadastroClientes);
-<<<<<<< HEAD
-app.use('/loginempresa', rotaLoginEmpresa)
-=======
+app.use('/loginempresa', rotaLoginEmpresa);
 app.use('/login', rotaLoginClientes);
->>>>>>> e519487278c0d952df8593405923f1b0127ab5b6
 
 //TRATAMENTO PARA QUANDO NÃO FOR ENCONTRADO UMA ROTA
 app.use((req, res, next) =>{
