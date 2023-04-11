@@ -4,7 +4,6 @@ const cors = require('cors');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 
-const rotaLoginEmpresa = require('./routes/loginEmpresa')
 const rotaEmpresa = require('./routes/empresa');
 const rotaPedidos = require('./routes/pedidos');
 const rotaCadastroClientes = require('./routes/cadastro_cliente');
@@ -18,11 +17,7 @@ app.use(bodyParser.json()); // json de entrada no body
 app.use('/empresa', rotaEmpresa);
 app.use('/pedidos', rotaPedidos);
 app.use('/cadastro', rotaCadastroClientes);
-<<<<<<< HEAD
-app.use('/loginempresa', rotaLoginEmpresa)
-=======
-app.use('/login', rotaLoginClientes);
->>>>>>> e519487278c0d952df8593405923f1b0127ab5b6
+app.use('/logincliente', rotaLoginClientes);
 
 //TRATAMENTO PARA QUANDO NÃO FOR ENCONTRADO UMA ROTA
 app.use((req, res, next) =>{
