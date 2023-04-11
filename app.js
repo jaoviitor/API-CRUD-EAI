@@ -4,7 +4,6 @@ const cors = require('cors');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 
-const rotaLoginEmpresa = require('./routes/loginEmpresa')
 const rotaEmpresa = require('./routes/empresa');
 const rotaPedidos = require('./routes/pedidos');
 const rotaCadastroClientes = require('./routes/cadastro_cliente');
@@ -20,6 +19,7 @@ app.use('/pedidos', rotaPedidos);
 app.use('/cadastro', rotaCadastroClientes);
 app.use('/loginempresa', rotaLoginEmpresa);
 app.use('/login', rotaLoginClientes);
+app.use('/logincliente', rotaLoginClientes);
 
 //TRATAMENTO PARA QUANDO NÃO FOR ENCONTRADO UMA ROTA
 app.use((req, res, next) =>{
