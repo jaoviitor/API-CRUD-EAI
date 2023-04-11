@@ -17,8 +17,6 @@ app.use(bodyParser.json()); // json de entrada no body
 app.use('/empresa', rotaEmpresa);
 app.use('/pedidos', rotaPedidos);
 app.use('/cadastro', rotaCadastroClientes);
-app.use('/loginempresa', rotaLoginEmpresa);
-app.use('/login', rotaLoginClientes);
 app.use('/logincliente', rotaLoginClientes);
 
 //TRATAMENTO PARA QUANDO NÃO FOR ENCONTRADO UMA ROTA
