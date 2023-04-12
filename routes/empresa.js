@@ -17,6 +17,7 @@ router.get('/', (req, res, next) => {
     })
     
 });
+
 //CADASTRA UMA NOVA EMPRESA NO BANCO
 router.post('/cadastro', (req, res, next) => {
     mysql.getConnection((error, conn) =>{
@@ -24,6 +25,25 @@ router.post('/cadastro', (req, res, next) => {
         conn.query(
             'INSERT INTO Empresa (CNPJ, Nome_empresarial, Nome_fantasia, Porte, CEP, Logradouro, Numero, Complemento, Bairro, Municipio, UF, Telefone, Email, Senha_original) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
             [req.body.cnpj, req.body.nomeEmpresarial, req.body.nomeFantasia, req.body.porte, req.body.cep, req.body.logradouro, req.body.numero, req.body.complemento, req.body.bairro, req.body.municipio, req.body.uf, req.body.telefone, req.body.email, req.body.senha],
+            (error, resultado, field) => {
+                conn.release();
+                if(error){ return res.status(500).send({ error: error }) };
+
+                res.status(201).send({
+                    mensagem: 'Empresa cadastrada com sucesso!'
+                })
+            }
+        )
+    })
+});
+
+//CADASTRA UM NOVO FUNCIONÁRIO DA EMPRESA NO BANCO
+router.post('/cadastrofuncionario', (req, res, next) => {
+    mysql.getConnection((error, conn) =>{
+        if(error){ return res.status(500).send({ error: error }) };
+        conn.query(
+            'INSERT INTO parceiro (Nome, RG, CPF, Telefone, Sexo, Email, Senha_original, Senha) VALUES (?,?,?,?,?,?,?,?)',
+            [req.body.nome, req.body.rg, req.body.cpf, req.body.telefone, req.body.sexo, req.body.email, req.body.senha1, req.body.senha2],
             (error, resultado, field) => {
                 conn.release();
                 if(error){ return res.status(500).send({ error: error }) };
