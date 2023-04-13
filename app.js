@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 
 const rotaEmpresa = require('./routes/empresa');
+const rotaFuncionario = require('./routes/funcionario');
 const rotaPedidos = require('./routes/pedidos');
 const rotaCadastroClientes = require('./routes/cadastro_cliente');
 const rotaLoginClientes = require('./routes/login_cliente');
@@ -15,6 +16,7 @@ app.use(bodyParser.urlencoded({ extended: false})); // apenas dados simples
 app.use(bodyParser.json()); // json de entrada no body
 
 app.use('/empresa', rotaEmpresa);
+app.use('/funcionario', rotaFuncionario);
 app.use('/pedidos', rotaPedidos);
 app.use('/cadastro', rotaCadastroClientes);
 app.use('/logincliente', rotaLoginClientes);
