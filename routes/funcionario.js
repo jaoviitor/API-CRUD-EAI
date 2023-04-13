@@ -1,0 +1,69 @@
+const express = require('express');
+const router = express.Router();
+const mysql = require('../mysql').pool;
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv').config();
+
+//CADASTRA UM NOVO FUNCIONÁRIO DA EMPRESA NO BANCO
+router.post('/cadastro', (req, res, next) => {
+    mysql.getConnection((error, conn) =>{
+        if(error){ return res.status(500).send({ error: error }) };
+        conn.query('SELECT * FROM Funcionario WHERE Email = ?', [req.body.Email], (error, results) =>{
+            if(error) { return res.status(500).send({ error: error })}
+            if(results.length > 0) {
+                res.status(409).send({ mensagem: 'Funcionário já cadastrado' })
+            } else{
+                bcrypt.hash(req.body.Senha, 10, (errBcrypt, hash) =>{
+                    if (errBcrypt) { return res.status(500).send({ error: errBcrypt }) }
+                    conn.query(`INSERT INTO Funcionario (Nome, RG, CPF, Telefone, Sexo, Email, Senha) VALUES (?,?,?,?,?,?,?)`,
+                    [req.body.Nome, req.body.RG, req.body.CPF, req.body.Telefone, req.body.Sexo, req.body.Email, hash],
+                    (error, results) =>{
+                        conn.release();
+                        if (error) { return res.status(500).send({ error: error })}
+                        res.status(201).send({
+                            mensagem: 'Funcionário cadastrado com sucesso!'
+                        })
+                    })
+                })
+            }
+        })
+    })
+});
+
+//LOGIN DO FUNCIONÁRIO
+router.post('/login', (req, res, next) =>{
+    mysql.getConnection((error, conn) =>{
+        if (error) { return res.status(500).send({ error: error }) }
+        const query = `SELECT * FROM Funcionario WHERE Email = ?`;
+        conn.query(query,[req.body.Email], (error, results, fields) =>{
+            conn.release();
+            if (error) { return res.status(500).send({ error: error }) }
+            if (results.length < 1){ //conferindo se o email está no banco
+                return res.status(401).send({ mensagem: 'Falha na autenticação' });
+            }
+            bcrypt.compare(req.body.Senha, results[0].Senha, (err, result) =>{ //comparando a senha com o hash
+                if (err){
+                    return res.status(401).send({ mensagem: 'Falha na autenticação' });
+                }
+                if (result){ //gerando o token
+                    const token = jwt.sign({
+                        CodFuncionario: results[0].CodFuncionario,
+                        email: results[0].Email
+                    }, 
+                    process.env.JWT_KEY,
+                    {
+                        expiresIn: "1h" //tempo de expiração do token
+                    })
+                    return res.status(200).send({
+                        mensagem: 'Autenticado com sucesso',
+                        token: token
+                    });
+                }
+                return res.status(401).send({ mensagem: 'Falha na autenticação' });
+            })
+        })
+    })
+});
+
+module.exports = router;
