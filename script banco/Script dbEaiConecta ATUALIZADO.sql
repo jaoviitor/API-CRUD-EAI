@@ -1,5 +1,10 @@
 CREATE DATABASE dbEaiConecta;
 USE dbEaiConecta;
+select * from empresa;
+SELECT * FROM Funcionario;
+DROP TABLE FUNCIONARIO;
+DROP TABLE Empresa;
+DROP TABLE Solicitacao;
 
 CREATE TABLE Cliente(CodCliente INT PRIMARY KEY AUTO_INCREMENT,
 					 Nome VARCHAR(50) NOT NULL,
@@ -13,18 +18,19 @@ CREATE TABLE Cliente(CodCliente INT PRIMARY KEY AUTO_INCREMENT,
                      Senha_original VARCHAR(30),
                      Senha VARCHAR(256) GENERATED ALWAYS AS (SHA2(CONCAT('test_salt', Senha_original), 256)) VIRTUAL) AUTO_INCREMENT = 10000;
                      
-CREATE TABLE Parceiro(CodParceiro INT PRIMARY KEY AUTO_INCREMENT,
-					  Nome VARCHAR(60) NOT NULL,
-                      RG CHAR(7) NOT NULL,
-                      CPF CHAR(11) NOT NULL,
-                      Telefone CHAR(11) NOT NULL,
-                      Sexo CHAR(1) NOT NULL,
-                      Email VARCHAR(50) NOT NULL,
-                      Senha_original VARCHAR(30) NOT NULL,
-                      Senha VARCHAR(256) GENERATED ALWAYS AS (SHA2(CONCAT('test_salt', Senha_original), 256)) VIRTUAL) AUTO_INCREMENT = 30000;
+CREATE TABLE Funcionario(CodFuncionario INT PRIMARY KEY AUTO_INCREMENT,
+						 Nome VARCHAR(60) NOT NULL,
+						 RG VARCHAR(30) NOT NULL,
+						 CPF VARCHAR(30) NOT NULL,
+						 Telefone VARCHAR(30) NOT NULL,
+						 Sexo CHAR(1) NOT NULL,
+						 Email VARCHAR(50) NOT NULL,
+						 CodEmpresa INT,
+						 FOREIGN KEY (CodEmpresa) REFERENCES Empresa(CodEmpresa),
+						 Senha VARCHAR(256) NOT NULL) AUTO_INCREMENT = 30000;
 
 CREATE TABLE Empresa(CodEmpresa INT PRIMARY KEY AUTO_INCREMENT,
-					 CNPJ CHAR(30) NOT NULL,
+					 CNPJ VARCHAR(30) NOT NULL,
 					 Nome_empresarial VARCHAR(70) NOT NULL,
 					 Nome_fantasia VARCHAR(60) NOT NULL,
                      Porte VARCHAR(35) NOT NULL,
@@ -37,10 +43,10 @@ CREATE TABLE Empresa(CodEmpresa INT PRIMARY KEY AUTO_INCREMENT,
                      UF CHAR(2) NOT NULL,
                      Telefone VARCHAR(30) NOT NULL,
 					 Email VARCHAR(50) NOT NULL,
-                     CodParceiro INT,
-                     FOREIGN KEY (CodParceiro) REFERENCES Parceiro(CodParceiro),
-					 Senha_original VARCHAR(30),
-					 Senha VARCHAR(256) GENERATED ALWAYS AS (SHA2(CONCAT('test_salt', Senha_original), 256)) VIRTUAL) AUTO_INCREMENT = 50000;
+					 Senha VARCHAR(256) NOT NULL) AUTO_INCREMENT = 50000;
+                     
+
+                     
                                  
 
 CREATE TABLE Pix(IdPix INT PRIMARY KEY AUTO_INCREMENT,
@@ -69,11 +75,11 @@ CREATE TABLE Solicitacao(CodSolicitacao INT PRIMARY KEY AUTO_INCREMENT,
                          Servico VARCHAR(15) NOT NULL,
                          Localizacao VARCHAR(30) NOT NULL,
                          AreaLocal VARCHAR(20) NOT NULL,
-                         CodParceiro INT,
+                         CodFuncionario INT,
                          CodEmpresa INT,
                          CodCliente INT,
                          IdPagamento INT,
-                         FOREIGN KEY (CodParceiro) REFERENCES Parceiro (CodParceiro),
+                         FOREIGN KEY (CodFuncionario) REFERENCES Funcionario (CodFuncionario),
                          FOREIGN KEY (CodEmpresa) REFERENCES Empresa (CodEmpresa),
                          FOREIGN KEY (CodCliente) REFERENCES Cliente (CodCliente),
                          FOREIGN KEY (IdPagamento) REFERENCES Pagamento (IdPagamento));
