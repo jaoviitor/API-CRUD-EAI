@@ -4,9 +4,12 @@ const mysql = require('../mysql').pool;
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv').config();
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' })
 
 //CADASTRA UM NOVO FUNCIONÁRIO DA EMPRESA NO BANCO
-router.post('/cadastro', (req, res, next) => {
+router.post('/cadastro', upload.single('imagem_funcionario'), (req, res, next) => {
+    console.log(req.file);
     mysql.getConnection((error, conn) =>{
         if(error){ return res.status(500).send({ error: error }) };
         conn.query('SELECT * FROM Funcionario WHERE Email = ?', [req.body.Email], (error, results) =>{
@@ -64,6 +67,21 @@ router.post('/login', (req, res, next) =>{
             })
         })
     })
+});
+
+//RETORNA OS FUNCIONÁRIO CADASTRADOS
+router.get('/', (req, res, next) => {
+    mysql.getConnection((error, conn) =>{
+        if(error){ return res.status(500).send({ error: error }) };
+        conn.query(
+            'SELECT * FROM parceiro;',
+            (error, resultado, fields) =>{
+                if(error){ return res.status(500).send({ error: error }) };
+                return res.status(200).send({response: resultado});
+            }
+        )
+    })
+    
 });
 
 module.exports = router;
