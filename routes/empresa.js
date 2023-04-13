@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const mysql = require('../mysql').pool;
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv').config();
 
 //RETORNA AS EMPRESAS CADASTRADAS
 router.get('/', (req, res, next) => {
@@ -22,39 +24,62 @@ router.get('/', (req, res, next) => {
 router.post('/cadastro', (req, res, next) => {
     mysql.getConnection((error, conn) =>{
         if(error){ return res.status(500).send({ error: error }) };
-        conn.query(
-            'INSERT INTO Empresa (CNPJ, Nome_empresarial, Nome_fantasia, Porte, CEP, Logradouro, Numero, Complemento, Bairro, Municipio, UF, Telefone, Email, Senha_original) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
-            [req.body.cnpj, req.body.nomeEmpresarial, req.body.nomeFantasia, req.body.porte, req.body.cep, req.body.logradouro, req.body.numero, req.body.complemento, req.body.bairro, req.body.municipio, req.body.uf, req.body.telefone, req.body.email, req.body.senha],
-            (error, resultado, field) => {
-                conn.release();
-                if(error){ return res.status(500).send({ error: error }) };
-
-                res.status(201).send({
-                    mensagem: 'Empresa cadastrada com sucesso!'
+        conn.query('SELECT * FROM Empresa WHERE Email = ?', [req.body.Email], (error, results) =>{
+            if(error) { return res.status(500).send({ error: error })}
+            if(results.length > 0) {
+                res.status(409).send({ mensagem: 'Empresa já cadastrada' })
+            } else{
+                bcrypt.hash(req.body.Senha, 10, (errBcrypt, hash) =>{
+                    if (errBcrypt) { return res.status(500).send({ error: errBcrypt }) }
+                    conn.query(`INSERT INTO Empresa (CNPJ, Nome_empresarial, Nome_fantasia, Porte, CEP, Logradouro, Numero, Complemento, Bairro, Municipio, UF, Telefone, Email, Senha) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+                    [req.body.CNPJ, req.body.Nome_empresarial, req.body.Nome_fantasia, req.body.Porte, req.body.CEP, req.body.Logradouro, req.body.Numero, req.body.Complemento, req.body.Bairro, req.body.Municipio, req.body.UF, req.body.Telefone, req.body.Email, hash],
+                    (error, results) =>{
+                        conn.release();
+                        if (error) { return res.status(500).send({ error: error })}
+                        res.status(201).send({
+                            mensagem: 'Empresa cadastrada com sucesso!'
+                        })
+                    })
                 })
             }
-        )
+        })
     })
 });
 
-//CADASTRA UM NOVO FUNCIONÁRIO DA EMPRESA NO BANCO
-router.post('/cadastrofuncionario', (req, res, next) => {
+router.post('/login', (req, res, next) =>{
     mysql.getConnection((error, conn) =>{
-        if(error){ return res.status(500).send({ error: error }) };
-        conn.query(
-            'INSERT INTO parceiro (Nome, RG, CPF, Telefone, Sexo, Email, Senha_original, Senha) VALUES (?,?,?,?,?,?,?,?)',
-            [req.body.nome, req.body.rg, req.body.cpf, req.body.telefone, req.body.sexo, req.body.email, req.body.senha1, req.body.senha2],
-            (error, resultado, field) => {
-                conn.release();
-                if(error){ return res.status(500).send({ error: error }) };
-
-                res.status(201).send({
-                    mensagem: 'Empresa cadastrada com sucesso!'
-                })
+        if (error) { return res.status(500).send({ error: error }) }
+        const query = `SELECT * FROM Empresa WHERE Email = ?`;
+        conn.query(query,[req.body.Email], (error, results, fields) =>{
+            conn.release();
+            if (error) { return res.status(500).send({ error: error }) }
+            if (results.length < 1){ //conferindo se o email está no banco
+                return res.status(401).send({ mensagem: 'Falha na autenticação' });
             }
-        )
+            bcrypt.compare(req.body.Senha, results[0].Senha, (err, result) =>{ //comparando a senha com o hash
+                if (err){
+                    return res.status(401).send({ mensagem: 'Falha na autenticação' });
+                }
+                if (result){ //gerando o token
+                    const token = jwt.sign({
+                        CodEmpresa: results[0].CodEmpresa,
+                        email: results[0].Email
+                    }, 
+                    process.env.JWT_KEY,
+                    {
+                        expiresIn: "1h"
+                    })
+                    return res.status(200).send({
+                        mensagem: 'Autenticado com sucesso',
+                        token: token
+                    });
+                }
+                return res.status(401).send({ mensagem: 'Falha na autenticação' });
+            })
+        })
     })
-});
+})
+
 //LOGIN DA EMPRESA
 router.post('/login', (req, res, next) => {
     mysql.getConnection((error, conn) =>{
@@ -64,7 +89,7 @@ router.post('/login', (req, res, next) => {
         const senha = req.body.senha;
 
         conn.query(
-            'SELECT * FROM Empresa WHERE Email = ? AND Senha_original = ?;',
+            'SELECT * FROM Empresa WHERE Email = ? AND Senha = ?;',
             [email, senha],
             (error, resultado, fields) =>{
                 if(error){ return res.status(500).send({ error: error }) };
