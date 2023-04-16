@@ -84,4 +84,19 @@ router.get('/', (req, res, next) => {
     
 });
 
+//RETORNA OS DADOS DE UM FUNCIONÁRIO
+router.get('/:CodFuncionario', (req, res, next) =>{
+    mysql.getConnection((error, conn) =>{
+        if(error){ return res.status(500).send({ error: error }) };
+        conn.query(
+            'SELECT * FROM Empresa WHERE CodFuncionario = ?;',
+            [req.params.CodFuncionario],
+            (error, resultado, fields) =>{
+                if(error){ return res.status(500).send({ error: error }) };
+                return res.status(200).send({response: resultado});
+            }
+        )
+    })
+});
+
 module.exports = router;
