@@ -89,7 +89,7 @@ router.get('/:CodFuncionario', (req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if(error){ return res.status(500).send({ error: error }) };
         conn.query(
-            'SELECT * FROM Empresa WHERE CodFuncionario = ?;',
+            'SELECT * FROM Funcionario WHERE CodFuncionario = ?;',
             [req.params.CodFuncionario],
             (error, resultado, fields) =>{
                 if(error){ return res.status(500).send({ error: error }) };
