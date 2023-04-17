@@ -12,6 +12,7 @@ router.get('/', (req, res, next) => {
         conn.query(
             'SELECT * FROM Empresa;',
             (error, resultado, fields) =>{
+                conn.release();
                 if(error){ return res.status(500).send({ error: error }) };
                 return res.status(200).send({response: resultado});
             }
@@ -92,6 +93,7 @@ router.post('/login', (req, res, next) => {
             'SELECT * FROM Empresa WHERE Email = ? AND Senha = ?;',
             [email, senha],
             (error, resultado, fields) =>{
+                conn.release();
                 if(error){ return res.status(500).send({ error: error }) };
 
                 if (resultado.length == 1) {
@@ -118,6 +120,7 @@ router.get('/:CodEmpresa', (req, res, next) =>{
             'SELECT * FROM Empresa WHERE CodEmpresa = ?;',
             [req.params.CodEmpresa],
             (error, resultado, fields) =>{
+                conn.release();
                 if(error){ return res.status(500).send({ error: error }) };
                 return res.status(200).send({response: resultado});
             }
