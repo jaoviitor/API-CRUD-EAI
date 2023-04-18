@@ -17,17 +17,6 @@ CREATE TABLE Cliente(CodCliente INT PRIMARY KEY AUTO_INCREMENT,
                      Telefone VARCHAR(12) NOT NULL,
                      Senha_original VARCHAR(30),
                      Senha VARCHAR(256) GENERATED ALWAYS AS (SHA2(CONCAT('test_salt', Senha_original), 256)) VIRTUAL) AUTO_INCREMENT = 10000;
-                     
-CREATE TABLE Funcionario(CodFuncionario INT PRIMARY KEY AUTO_INCREMENT,
-						 Nome VARCHAR(60) NOT NULL,
-						 RG VARCHAR(30) NOT NULL,
-						 CPF VARCHAR(30) NOT NULL,
-						 Telefone VARCHAR(30) NOT NULL,
-						 Sexo CHAR(1) NOT NULL,
-						 Email VARCHAR(50) NOT NULL,
-						 CodEmpresa INT,
-						 FOREIGN KEY (CodEmpresa) REFERENCES Empresa(CodEmpresa),
-						 Senha VARCHAR(256) NOT NULL) AUTO_INCREMENT = 30000;
 
 CREATE TABLE Empresa(CodEmpresa INT PRIMARY KEY AUTO_INCREMENT,
 					 CNPJ VARCHAR(30) NOT NULL,
@@ -45,7 +34,16 @@ CREATE TABLE Empresa(CodEmpresa INT PRIMARY KEY AUTO_INCREMENT,
 					 Email VARCHAR(50) NOT NULL,
 					 Senha VARCHAR(256) NOT NULL) AUTO_INCREMENT = 50000;
                      
-
+CREATE TABLE Funcionario(CodFuncionario INT PRIMARY KEY AUTO_INCREMENT,
+						 Nome VARCHAR(60) NOT NULL,
+						 RG VARCHAR(30) NOT NULL,
+						 CPF VARCHAR(30) NOT NULL,
+						 Telefone VARCHAR(30) NOT NULL,
+						 Sexo CHAR(1) NOT NULL,
+						 Email VARCHAR(50) NOT NULL,
+						 CodEmpresa INT,
+						 FOREIGN KEY (CodEmpresa) REFERENCES Empresa(CodEmpresa),
+						 Senha VARCHAR(256) NOT NULL) AUTO_INCREMENT = 30000;
                      
                                  
 
