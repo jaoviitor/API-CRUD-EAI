@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 
 const rotaEmpresa = require('./routes/empresa');
 const rotaFuncionario = require('./routes/funcionario');
-const rotaPedidos = require('./routes/pedidos');
+const rotaSolicitacao = require('./routes/solicitacao');
 const rotaCadastroClientes = require('./routes/cadastro_cliente');
 const rotaLoginClientes = require('./routes/login_cliente');
 
@@ -15,9 +15,20 @@ app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false})); // apenas dados simples
 app.use(bodyParser.json()); // json de entrada no body
 
+app.use((req, res, next) =>{
+    res.header('Access-Control-Allow-Origin', 'https://eaiconecta-api.onrender.com'); // só permite o acesso da API por esse servidor
+    res.header('Access-Control-Allow-Header', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+
+    if(req.method === 'OPTIONS'){
+        res.header('Acess-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
+        return res.status(200).send({});
+    }
+    next();
+})
+
 app.use('/empresa', rotaEmpresa);
 app.use('/funcionario', rotaFuncionario);
-app.use('/pedidos', rotaPedidos);
+app.use('/pedidos', rotaSolicitacao);
 app.use('/cadastro', rotaCadastroClientes);
 app.use('/logincliente', rotaLoginClientes);
 
