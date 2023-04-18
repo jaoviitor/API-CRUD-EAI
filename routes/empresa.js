@@ -12,6 +12,7 @@ router.get('/', (req, res, next) => {
         conn.query(
             'SELECT * FROM Empresa;',
             (error, resultado, fields) =>{
+                conn.release();
                 if(error){ return res.status(500).send({ error: error }) };
                 return res.status(200).send({response: resultado});
             }
@@ -81,6 +82,35 @@ router.post('/login', (req, res, next) =>{
 })
 
 
+<<<<<<< HEAD
+=======
+        const email = req.body.email;
+        const senha = req.body.senha;
+
+        conn.query(
+            'SELECT * FROM Empresa WHERE Email = ? AND Senha = ?;',
+            [email, senha],
+            (error, resultado, fields) =>{
+                conn.release();
+                if(error){ return res.status(500).send({ error: error }) };
+
+                if (resultado.length == 1) {
+                    const token = jwt.sign(
+                      { email: email, id: resultado[0].CodEmpresa }, // informações do usuário que serão incluídas no token
+                      "DLKS43K6J8K32KNMA20P7KFM12XX", // process.env.JWT_KEY chave secreta para a assinatura do token (você pode gerar uma chave aleatória para isso)
+                      { expiresIn: '1h' } // tempo de expiração do token
+                    );
+                    
+                    console.log(token)
+                    return res.status(200).send({ message: 'Login realizado com sucesso!', token: token });
+                } else {
+                    return res.status(401).send({ message: 'Credenciais inválidas!' });
+                }
+            }
+        )
+    })
+});
+>>>>>>> 49503b43ff08d0b80f314806e28e9dd0f273cad3
 //RETORNA OS DADOS DE UMA EMPRESA 
 router.get('/:CodEmpresa', (req, res, next) =>{
     mysql.getConnection((error, conn) =>{
@@ -89,6 +119,7 @@ router.get('/:CodEmpresa', (req, res, next) =>{
             'SELECT * FROM Empresa WHERE CodEmpresa = ?;',
             [req.params.CodEmpresa],
             (error, resultado, fields) =>{
+                conn.release();
                 if(error){ return res.status(500).send({ error: error }) };
                 return res.status(200).send({response: resultado});
             }
