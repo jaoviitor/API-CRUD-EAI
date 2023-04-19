@@ -4,9 +4,17 @@ const mysql = require('../mysql').pool;
 
 //RETORNA OS PEDIDOS
 router.get('/', (req, res, next) => {
-    res.status(200).send({
-        mensagem: 'Retorna os pedidos'
-    });
+    mysql.getConnection((error, conn) =>{
+        if(error){ return res.status(500).send({ error: error }) };
+        conn.query(
+            'SELECT * FROM Solicitacao;',
+            (error, resultado, fields) =>{
+                conn.release();
+                if(error){ return res.status(500).send({ error: error }) };
+                return res.status(200).send({response: resultado});
+            }
+        )
+    })
 });
 
 //INSERE OS PEDIDOS
@@ -26,10 +34,6 @@ router.post('/', (req, res, next) => {
         )
 
     })
-    res.status(201).send({
-        mensagem: 'O pedido foi criado',
-        pedidoCriado: pedido
-    });
 });
 
 //RETORNA OS DADOS DE UM PEDIDO
