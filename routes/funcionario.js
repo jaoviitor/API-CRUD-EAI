@@ -38,11 +38,11 @@ router.post('/cadastro', upload.single('imagem_funcionario'), (req, res, next) =
 router.post('/login', (req, res, next) =>{
     mysql.getConnection((error, conn) =>{
         if (error) { return res.status(500).send({ error: error }) }
-        const query = `SELECT * FROM Funcionario WHERE Email = ?`;
-        conn.query(query,[req.body.Email], (error, results, fields) =>{
+        const query = `SELECT * FROM Funcionario WHERE Telefone = ?`;
+        conn.query(query,[req.body.Telefone], (error, results, fields) =>{
             conn.release();
             if (error) { return res.status(500).send({ error: error }) }
-            if (results.length < 1){ //conferindo se o email está no banco
+            if (results.length < 1){ //conferindo se o telefone está no banco
                 return res.status(401).send({ mensagem: 'Falha na autenticação' });
             }
             bcrypt.compare(req.body.Senha, results[0].Senha, (err, result) =>{ //comparando a senha com o hash
@@ -52,7 +52,7 @@ router.post('/login', (req, res, next) =>{
                 if (result){ //gerando o token
                     const token = jwt.sign({
                         CodFuncionario: results[0].CodFuncionario,
-                        email: results[0].Email
+                        telefone: results[0].Telefone
                     }, 
                     process.env.JWT_KEY,
                     {
