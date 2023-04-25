@@ -1,10 +1,5 @@
-CREATE DATABASE dbEaiConecta;
-USE dbEaiConecta;
-select * from empresa;
-SELECT * FROM Funcionario;
-DROP TABLE FUNCIONARIO;
-DROP TABLE Empresa;
-DROP TABLE Solicitacao;
+USE mvpeai_eai;
+
 
 CREATE TABLE Cliente(CodCliente INT PRIMARY KEY AUTO_INCREMENT,
 					 Nome VARCHAR(50) NOT NULL,
@@ -15,8 +10,7 @@ CREATE TABLE Cliente(CodCliente INT PRIMARY KEY AUTO_INCREMENT,
                      Ponto_ref VARCHAR(40) NULL,
                      Email VARCHAR(50) NOT NULL,
                      Telefone VARCHAR(12) NOT NULL,
-                     Senha_original VARCHAR(30),
-                     Senha VARCHAR(256) GENERATED ALWAYS AS (SHA2(CONCAT('test_salt', Senha_original), 256)) VIRTUAL) AUTO_INCREMENT = 10000;
+                     Senha VARCHAR(30)) AUTO_INCREMENT = 10000;
 
 CREATE TABLE Empresa(CodEmpresa INT PRIMARY KEY AUTO_INCREMENT,
 					 CNPJ VARCHAR(30) NOT NULL,
@@ -65,14 +59,17 @@ CREATE TABLE Pagamento(IdPagamento INT PRIMARY KEY AUTO_INCREMENT,
                        IdCartao INT,
                        FOREIGN KEY (IdPix) REFERENCES Pix(IdPix),
                        FOREIGN KEY (IdCartao) REFERENCES Cartao(IdCartao));
-                       
+ 
+ /* tabela antiga */
 CREATE TABLE Solicitacao(CodSolicitacao INT PRIMARY KEY AUTO_INCREMENT,
 						 Dt DATE NOT NULL,
                          Hora TIME NOT NULL,
                          Situacao VARCHAR(15) NOT NULL,
                          Servico VARCHAR(15) NOT NULL,
-                         Localizacao VARCHAR(30) NOT NULL,
+                         Localizacao VARCHAR(70) NOT NULL,
+                         TipoLocal VARCHAR(25) NOT NULL,
                          AreaLocal VARCHAR(20) NOT NULL,
+                         Telefone VARCHAR(30) NOT NULL,
                          CodFuncionario INT,
                          CodEmpresa INT,
                          CodCliente INT,
@@ -81,5 +78,30 @@ CREATE TABLE Solicitacao(CodSolicitacao INT PRIMARY KEY AUTO_INCREMENT,
                          FOREIGN KEY (CodEmpresa) REFERENCES Empresa (CodEmpresa),
                          FOREIGN KEY (CodCliente) REFERENCES Cliente (CodCliente),
                          FOREIGN KEY (IdPagamento) REFERENCES Pagamento (IdPagamento));
+                         
+ /* tabela nova */                         
+create table Agendamento (CodAgendamento int primary key auto_increment not null, 
+						  LocalServico varchar(50) not null,
+						  DataServico date not null,
+						  HoraServico time not null,
+						  MedidasLocal varchar(10) not null,
+						  Valor decimal(10,2) not null,
+						  InfoAdicionais varchar(120),
+						  Nome varchar(50) not null,
+						  CPF varchar(11) not null,
+						  FormasPagamento varchar(30) not null,
+						  CEP varchar(8) not null,
+						  Lougradouro varchar(50) not null,
+						  Numero varchar(6) not null,
+						  Bairro varchar(30) not null,
+						  PontoDeRef varchar(120),
+						  CodFuncionario INT,
+                          CodEmpresa INT,
+                          CodCliente INT,
+                          IdPagamento INT,
+                          FOREIGN KEY (CodFuncionario) REFERENCES Funcionario (CodFuncionario),
+                          FOREIGN KEY (CodEmpresa) REFERENCES Empresa (CodEmpresa),
+                          FOREIGN KEY (CodCliente) REFERENCES Cliente (CodCliente),
+                          FOREIGN KEY (IdPagamento) REFERENCES Pagamento (IdPagamento));
 
 SELECT * FROM Empresa;				
