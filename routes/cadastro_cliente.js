@@ -21,7 +21,7 @@ router.get('/:id_cliente', (req, res, next) =>{
 router.post('/cadastro_cliente', (req, res, next) => {
     mysql.getConnection((error, conn) =>{
         if(error){ return res.status(500).send({ error: error }) };
-        conn.query('SELECT * FROM Empresa WHERE Email = ?', [req.body.Email], (error, results) =>{
+        conn.query('SELECT * FROM Empresa WHERE email = ?', [req.body.email], (error, results) =>{
             if(error) { return res.status(500).send({ error: error })}
             if(results.length > 0) {
                 res.status(409).send({ mensagem: 'Empresa já cadastrada' })
