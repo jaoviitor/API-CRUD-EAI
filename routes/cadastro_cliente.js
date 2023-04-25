@@ -18,19 +18,28 @@ router.get('/:id_cliente', (req, res, next) =>{
     })
 });
 
-router.post('/', (req, res, next) => {
-
+router.post('/cadastro_cliente', (req, res, next) => {
     mysql.getConnection((error, conn) =>{
         if(error){ return res.status(500).send({ error: error }) };
-        conn.query(
-            'INSERT INTO Cadastro_clientes (Id_cliente, Nome, Email, Telefone, Senha) VALUES (?,?,?,?,?)',
-            [req.body.id_cliente,req.body.nome, req.body.email, req.body.telefone, req.body.senha],
-            (error, resultado, fields) => {
-                conn.release();
-                if(error){ return res.status(500).send({ error: error }) };
-                return res.status(200).send({response: resultado});
+        conn.query('SELECT * FROM Empresa WHERE Email = ?', [req.body.Email], (error, results) =>{
+            if(error) { return res.status(500).send({ error: error })}
+            if(results.length > 0) {
+                res.status(409).send({ mensagem: 'Empresa já cadastrada' })
+            } else{
+                bcrypt.hash(req.body.senha, 10, (errBcrypt, hash) =>{
+                    if (errBcrypt) { return res.status(500).send({ error: errBcrypt }) }
+                    conn.query(`INSERT INTO cadastro_cliente (id_cliente, nome, email, telefone, senha) VALUES (?,?,?,?,?)`,
+                    [req.body.id_cliente, req.body.nome, req.body.email, req.body.telefone, req.body.senha, hash],
+                    (error, results) =>{
+                        conn.release();
+                        if (error) { return res.status(500).send({ error: error })}
+                        res.status(201).send({
+                            mensagem: 'Empresa cadastrada com sucesso!'
+                        })
+                    })
+                })
             }
-        )
+        })
     })
 });
 
