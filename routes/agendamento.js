@@ -38,7 +38,7 @@ router.post('/', (req, res, next) => {
 
     mysql.getConnection((error, conn) =>{
         conn.query('INSERT INTO Agendamento (LocalServico, DataServico, HoraServico, MedidasLocal, Valor, InfoAdicionais, Nome, CPF, FormasPagamento, CEP, Logradouro, Numero, Bairro, PontoDeRef) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)',
-        [req.body.LocalServico, req.body.DataServico, req.body.HoraServico, req.body.MedidasLocal, req.body.InfoAdicionais, req.body.Nome, req.body.CPF, req.body.FormasPagamento, req.body.CEP, req.body.Logradouro, req.body.Numero, req.body.Bairro, req.body.PontoDeRef],
+        [req.body.LocalServico, req.body.DataServico, req.body.HoraServico, req.body.MedidasLocal, req.body.Valor, req.body.InfoAdicionais, req.body.Nome, req.body.CPF, req.body.FormasPagamento, req.body.CEP, req.body.Logradouro, req.body.Numero, req.body.Bairro, req.body.PontoDeRef],
         (error, resultado, field) =>{
             conn.release();
 
