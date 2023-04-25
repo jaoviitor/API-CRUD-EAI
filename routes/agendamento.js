@@ -17,6 +17,22 @@ router.get('/', (req, res, next) => {
     })
 });
 
+// RETORNA OS AGENDAMENTOS DE UM FUNCIONÁRIO
+router.get('/:CodFuncionario', (req, res, next) => {
+    mysql.getConnection((error, conn) =>{
+        if(error){ return res.status(500).send({ error: error }) };
+        conn.query(
+            'SELECT * FROM Agendamento WHERE CodParceiro = ?;',
+            [req.params.CodFuncionario],
+            (error, resultado, fields) =>{
+                conn.release();
+                if(error){ return res.status(500).send({ error: error }) };
+                return res.status(200).send({response: resultado});
+            }
+        )
+    })
+});
+
 //INSERE UM NOVO AGENDAMENTO
 router.post('/', (req, res, next) => {
 
