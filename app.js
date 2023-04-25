@@ -6,9 +6,8 @@ const bodyParser = require('body-parser');
 
 const rotaEmpresa = require('./routes/empresa');
 const rotaFuncionario = require('./routes/funcionario');
-const rotaSolicitacao = require('./routes/solicitacao');
-const rotaCadastroClientes = require('./routes/cadastro_cliente');
-const rotaLoginClientes = require('./routes/login_cliente');
+const rotaAgendamento = require('./routes/agendamento');
+const rotaCliente = require('./routes/cliente');
 
 app.use(cors());
 app.use(morgan('dev'));
@@ -28,9 +27,8 @@ app.use((req, res, next) =>{
 
 app.use('/empresa', rotaEmpresa);
 app.use('/funcionario', rotaFuncionario);
-app.use('/solicitacao', rotaSolicitacao);
-app.use('/cadastro', rotaCadastroClientes);
-app.use('/logincliente', rotaLoginClientes);
+app.use('/agendamento', rotaAgendamento);
+app.use('/cliente', rotaCliente);
 
 //TRATAMENTO PARA QUANDO NÃO FOR ENCONTRADO UMA ROTA
 app.use((req, res, next) =>{
