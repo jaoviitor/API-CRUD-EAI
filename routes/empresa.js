@@ -61,6 +61,7 @@ router.post('/login', (req, res, next) =>{
                 if (err){
                     return res.status(401).send({ mensagem: 'Falha na autenticação' });
                 }
+                //adicionar select nome da empresa
                 if (result){ //gerando o token
                     const token = jwt.sign({
                         CodEmpresa: results[0].CodEmpresa,
@@ -81,6 +82,7 @@ router.post('/login', (req, res, next) =>{
     })
 })
 
+//criar variácel com o id da empresa logada para fazer o get, pode pegar do token
 
 //RETORNA OS DADOS DE UMA EMPRESA 
 router.get('/:CodEmpresa', (req, res, next) =>{
