@@ -19,8 +19,8 @@ router.post('/cadastro', upload.single('imagem_funcionario'), (req, res, next) =
             } else{
                 bcrypt.hash(req.body.Senha, 10, (errBcrypt, hash) =>{
                     if (errBcrypt) { return res.status(500).send({ error: errBcrypt }) }
-                    conn.query(`INSERT INTO Funcionario (Nome, RG, CPF, Telefone, Sexo, Email, Senha) VALUES (?,?,?,?,?,?,?)`,
-                    [req.body.Nome, req.body.RG, req.body.CPF, req.body.Telefone, req.body.Sexo, req.body.Email, hash],
+                    conn.query(`INSERT INTO Funcionario (Nome, RG, CPF, Telefone, Sexo, Email, CodEmpresa, Senha) VALUES (?,?,?,?,?,?,?,?)`,
+                    [req.body.Nome, req.body.RG, req.body.CPF, req.body.Telefone, req.body.Sexo, req.body.Email, req.body.CodEmpresa, hash],
                     (error, results) =>{
                         conn.release();
                         if (error) { return res.status(500).send({ error: error })}
