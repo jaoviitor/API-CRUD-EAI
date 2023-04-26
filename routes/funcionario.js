@@ -101,4 +101,20 @@ router.get('/:CodFuncionario', (req, res, next) =>{
     })
 });
 
+//RETORNA OS DADOS DOS FUNCIONÁRIOS DA MESMA EMPRESA
+router.get('/codigo/:CodEmpresa', (req, res, next) =>{
+    mysql.getConnection((error, conn) =>{
+        if(error){ return res.status(500).send({ error: error }) };
+        conn.query(
+            'SELECT * FROM Funcionario WHERE CodEmpresa = ?;',
+            [req.params.CodEmpresa],
+            (error, resultado, fields) =>{
+                conn.release();
+                if(error){ return res.status(500).send({ error: error }) };
+                return res.status(200).send({response: resultado});
+            }
+        )
+    })
+});
+
 module.exports = router;
