@@ -17,17 +17,24 @@ router.post('/cadastro', upload.single('imagem_funcionario'), (req, res, next) =
             if(results.length > 0) {
                 res.status(409).send({ mensagem: 'Funcionário já cadastrado' })
             } else{
-                bcrypt.hash(req.body.Senha, 10, (errBcrypt, hash) =>{
-                    if (errBcrypt) { return res.status(500).send({ error: errBcrypt }) }
-                    conn.query(`INSERT INTO Funcionario (Nome, RG, CPF, Telefone, Sexo, Email, CodEmpresa, Senha) VALUES (?,?,?,?,?,?,?,?)`,
-                    [req.body.Nome, req.body.RG, req.body.CPF, req.body.Telefone, req.body.Sexo, req.body.Email, req.body.CodEmpresa, hash],
-                    (error, results) =>{
-                        conn.release();
-                        if (error) { return res.status(500).send({ error: error })}
-                        res.status(201).send({
-                            mensagem: 'Funcionário cadastrado com sucesso!'
+                conn.query('SELECT * FROM Funcionario WHERE Telefone = ?', [req.body.Telefone], (error, results) => {
+                    if(error) { return res.status(500).send({ error: error })}
+                    if(results.length > 0){
+                        res.status(409).send({ mensagem: 'Telefone já cadastrado' })
+                    } else{
+                        bcrypt.hash(req.body.Senha, 10, (errBcrypt, hash) =>{
+                            if (errBcrypt) { return res.status(500).send({ error: errBcrypt }) }
+                            conn.query(`INSERT INTO Funcionario (Nome, RG, CPF, Telefone, Sexo, Email, CodEmpresa, Senha) VALUES (?,?,?,?,?,?,?,?)`,
+                            [req.body.Nome, req.body.RG, req.body.CPF, req.body.Telefone, req.body.Sexo, req.body.Email, req.body.CodEmpresa, hash],
+                            (error, results) =>{
+                                conn.release();
+                                if (error) { return res.status(500).send({ error: error })}
+                                res.status(201).send({
+                                    mensagem: 'Funcionário cadastrado com sucesso!'
+                                })
+                            })
                         })
-                    })
+                    }
                 })
             }
         })
