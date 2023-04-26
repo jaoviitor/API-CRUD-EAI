@@ -7,7 +7,7 @@ router.get('/', (req, res, next) => {
     mysql.getConnection((error, conn) =>{
         if(error){ return res.status(500).send({ error: error }) };
         conn.query(
-            'SELECT * FROM Agendamento;',
+            'SELECT * FROM Agendamento WHERE CodFuncionario IS NULL;',
             (error, resultado, fields) =>{
                 conn.release();
                 if(error){ return res.status(500).send({ error: error }) };
@@ -22,7 +22,7 @@ router.get('/:CodFuncionario', (req, res, next) => {
     mysql.getConnection((error, conn) =>{
         if(error){ return res.status(500).send({ error: error }) };
         conn.query(
-            'SELECT * FROM Agendamento WHERE CodParceiro = ?;',
+            'SELECT * FROM Agendamento WHERE CodFuncionario = ?;',
             [req.params.CodFuncionario],
             (error, resultado, fields) =>{
                 conn.release();
@@ -67,6 +67,32 @@ router.get('/:CodAgendamento', (req, res, next) =>{
         )
     })
 });
+
+// ATRIBUIR UM FUNCIONÁRIO EM UM AGENDAMENTO
+router.put('/atribuir/:CodAgendamento', (req, res, next) => {
+    const CodAgendamento = req.params.CodAgendamento;
+    const CodFuncionario = req.body.CodFuncionario;
+    
+    mysql.getConnection((error, conn) => {
+      if (error) {
+        return res.status(500).send({ error: error });
+      };
+      
+      conn.query(
+        'UPDATE Agendamento SET CodFuncionario = ? WHERE CodAgendamento = ?',
+        [CodFuncionario, CodAgendamento],
+        (error, resultado, fields) => {
+          conn.release();
+          if (error) {
+            return res.status(500).send({ error: error });
+          };
+          
+          return res.status(200).send({ response: resultado });
+        }
+      )
+    })
+  });
+
 
 //EXCLUI UM AGENDAMENTO
 router.delete('/', (req, res, next) => {

@@ -4,6 +4,7 @@ const mysql = require('../mysql').pool;
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv').config();
+const login = require('../middleware/login');
 
 //RETORNA AS EMPRESAS CADASTRADAS
 router.get('/', (req, res, next) => {
@@ -73,6 +74,8 @@ router.post('/login', (req, res, next) =>{
                     })
                     return res.status(200).send({
                         mensagem: 'Autenticado com sucesso',
+						CodEmpresa: results[0].CodEmpresa,
+						Nome_fantasia: results[0].Nome_fantasia,
                         token: token
                     });
                 }
@@ -81,6 +84,7 @@ router.post('/login', (req, res, next) =>{
         })
     })
 })
+
 
 //criar variácel com o id da empresa logada para fazer o get, pode pegar do token
 
