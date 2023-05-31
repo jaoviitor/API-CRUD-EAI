@@ -34,7 +34,7 @@ router.post('/cadastro', (req, res, next) => {
                 bcrypt.hash(req.body.Senha, 10, (errBcrypt, hash) =>{
                     if (errBcrypt) { return res.status(500).send({ error: errBcrypt }) }
                     conn.query(`INSERT INTO Empresa (Situacao, CNPJ, Nome_empresarial, Nome_fantasia, Porte, CEP, Logradouro, Numero, Complemento, Bairro, Municipio, UF, Telefone, Email, Senha) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
-                    [req.body.Situcao, req.body.CNPJ, req.body.Nome_empresarial, req.body.Nome_fantasia, req.body.Porte, req.body.CEP, req.body.Logradouro, req.body.Numero, req.body.Complemento, req.body.Bairro, req.body.Municipio, req.body.UF, req.body.Telefone, req.body.Email, hash],
+                    [req.body.Situacao, req.body.CNPJ, req.body.Nome_empresarial, req.body.Nome_fantasia, req.body.Porte, req.body.CEP, req.body.Logradouro, req.body.Numero, req.body.Complemento, req.body.Bairro, req.body.Municipio, req.body.UF, req.body.Telefone, req.body.Email, hash],
                     (error, results) =>{
                         conn.release();
                         if (error) { return res.status(500).send({ error: error })}
