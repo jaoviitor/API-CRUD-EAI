@@ -10,29 +10,31 @@ CREATE TABLE Cliente(CodCliente INT PRIMARY KEY AUTO_INCREMENT,
                      Ponto_ref VARCHAR(40) NULL,
                      Email VARCHAR(50) NOT NULL,
                      Telefone VARCHAR(12) NOT NULL,
-                     Senha VARCHAR(30)) AUTO_INCREMENT = 10000;
+                     Senha VARCHAR(256)) AUTO_INCREMENT = 10000;
 
 CREATE TABLE Empresa(CodEmpresa INT PRIMARY KEY AUTO_INCREMENT,
-					 CNPJ VARCHAR(30) NOT NULL,
+                     Situacao VARCHAR(12) NOT NULL,
+					 CNPJ VARCHAR(14) NOT NULL,
 					 Nome_empresarial VARCHAR(70) NOT NULL,
 					 Nome_fantasia VARCHAR(60) NOT NULL,
-                     Porte VARCHAR(35) NOT NULL,
-                     CEP VARCHAR(30) NOT NULL,
+                     Porte VARCHAR(40) NOT NULL,
+                     CEP VARCHAR(8) NOT NULL,
                      Logradouro VARCHAR(60) NOT NULL,
                      Numero VARCHAR(10) NOT NULL,
                      Complemento VARCHAR(30) NULL,
                      Bairro VARCHAR(40) NOT NULL,
                      Municipio VARCHAR(30) NOT NULL,
                      UF CHAR(2) NOT NULL,
-                     Telefone VARCHAR(30) NOT NULL,
+                     Telefone VARCHAR(12) NOT NULL,
 					 Email VARCHAR(50) NOT NULL,
 					 Senha VARCHAR(256) NOT NULL) AUTO_INCREMENT = 50000;
                      
 CREATE TABLE Funcionario(CodFuncionario INT PRIMARY KEY AUTO_INCREMENT,
+                         Situacao VARCHAR(15) NOT NULL,
 						 Nome VARCHAR(60) NOT NULL,
-						 RG VARCHAR(30) NOT NULL,
-						 CPF VARCHAR(30) NOT NULL,
-						 Telefone VARCHAR(30) NOT NULL,
+						 RG VARCHAR(7) NOT NULL,
+						 CPF VARCHAR(11) NOT NULL,
+						 Telefone VARCHAR(12) NOT NULL,
 						 Sexo CHAR(1) NOT NULL,
 						 Email VARCHAR(50) NOT NULL,
 						 CodEmpresa INT,
@@ -43,22 +45,22 @@ CREATE TABLE Funcionario(CodFuncionario INT PRIMARY KEY AUTO_INCREMENT,
 
 CREATE TABLE Pix(IdPix INT PRIMARY KEY AUTO_INCREMENT,
 				 Valor DECIMAL(10,2) NOT NULL,
-                 Banco VARCHAR(25) NOT NULL);
+                 Banco VARCHAR(25) NOT NULL
+                 IdPagamento INT,
+                 FOREIGN KEY (IdPagamento) REFERENCES Pagamento(IdPagamento)) AUTO_INCREMENT = 60000;
                  
 CREATE TABLE Cartao(IdCartao INT PRIMARY KEY AUTO_INCREMENT,
 					Nome VARCHAR(50) NOT NULL,
                     Valor DECIMAL(10,2) NOT NULL,
                     Bandeira VARCHAR(25) NOT NULL,
-                    Numero VARCHAR(16) NOT NULL);
+                    Numero VARCHAR(16) NOT NULL
+                    IdPagamento INT,
+                    FOREIGN KEY (IdPagamento) REFERENCES Pagamento(IdPagamento)) AUTO_INCREMENT = 70000;
                       
 CREATE TABLE Pagamento(IdPagamento INT PRIMARY KEY AUTO_INCREMENT,
 					   Dt DATE NOT NULL,
                        Hora TIME NOT NULL,
-                       Valor DECIMAL(10,2) NOT NULL,
-                       IdPix INT,
-                       IdCartao INT,
-                       FOREIGN KEY (IdPix) REFERENCES Pix(IdPix),
-                       FOREIGN KEY (IdCartao) REFERENCES Cartao(IdCartao));
+                       Valor DECIMAL(10,2) NOT NULL) AUTO_INCREMENT = 80000;
  
  /* tabela antiga */
 CREATE TABLE Solicitacao(CodSolicitacao INT PRIMARY KEY AUTO_INCREMENT,
@@ -102,6 +104,6 @@ create table Agendamento (CodAgendamento int primary key auto_increment not null
                           FOREIGN KEY (CodFuncionario) REFERENCES Funcionario (CodFuncionario),
                           FOREIGN KEY (CodEmpresa) REFERENCES Empresa (CodEmpresa),
                           FOREIGN KEY (CodCliente) REFERENCES Cliente (CodCliente),
-                          FOREIGN KEY (IdPagamento) REFERENCES Pagamento (IdPagamento));
+                          FOREIGN KEY (IdPagamento) REFERENCES Pagamento (IdPagamento)) AUTO_INCREMENT = 90000;
 
 SELECT * FROM Empresa;				
