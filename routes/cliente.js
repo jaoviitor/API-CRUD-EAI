@@ -115,4 +115,20 @@ router.patch('/:CodCliente', (req, res, next) => {
     })
 });
 
+// DELETA UM CLIENTE
+router.delete('/:CodCliente', (req, res, next) =>{
+    mysql.getConnection((error, conn) =>{
+        if(error){ return res.status(500).send({ error: error }) };
+        conn.query(`DELETE FROM Cliente WHERE CodCliente = ?`,
+                [req.body.CodCliente],
+                (error, results) =>{
+                    conn.release();
+                    if (error) { return res.status(500).send({ error: error })}
+                    res.status(202).send({
+                        mensagem: 'Cliente removido com sucesso!'
+                    })
+                })
+    })
+});
+
 module.exports = router;
