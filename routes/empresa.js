@@ -106,13 +106,13 @@ router.get('/:CodEmpresa', (req, res, next) =>{
 //ALTERA UMA SOLICITACAO
 router.patch('/', (req, res, next) => {
     res.status(201).send({
-        mensagem: 'Usando o PATCH dentro da rota de solicitacao'
+        mensagem: 'Usando o PATCH'
     });
 });
 //EXCLUI UMA SOLICITACAO
 router.delete('/', (req, res, next) => {
     res.status(201).send({
-        mensagem: 'Usando o DELETE dentro da rota de solicitacao'
+        mensagem: 'Usando o DELETE'
     });
 });
 
