@@ -36,6 +36,36 @@ router.get('/:CodCliente', (req, res, next) =>{
     })
 });
 
+router.get('/indexlogado', (req, res, next) => {
+    mysql.getConnection((error, conn) =>{
+        if(error){ return res.status(500).send({ error: error }) };
+        conn.query(
+            'SELECT * FROM Cliente;',
+            (error, resultado, fields) =>{
+                conn.release();
+                if(error){ return res.status(500).send({ error: error }) };
+                return res.status(200).send({response: resultado});
+            }
+        )
+    })
+    
+});
+
+router.get('/robodesinfeccaologado', (req, res, next) => {
+    mysql.getConnection((error, conn) =>{
+        if(error){ return res.status(500).send({ error: error }) };
+        conn.query(
+            'SELECT * FROM Cliente;',
+            (error, resultado, fields) =>{
+                conn.release();
+                if(error){ return res.status(500).send({ error: error }) };
+                return res.status(200).send({response: resultado});
+            }
+        )
+    })
+    
+});
+
 // CADASTRA UM CLIENTE NOVO
 router.post('/cadastro', (req, res, next) => {
     mysql.getConnection((error, conn) =>{
@@ -47,8 +77,8 @@ router.post('/cadastro', (req, res, next) => {
             } else{
                 bcrypt.hash(req.body.Senha, 10, (errBcrypt, hash) =>{
                     if (errBcrypt) { return res.status(500).send({ error: errBcrypt }) }
-                    conn.query(`INSERT INTO Cliente (Nome, CEP, Logradouro, Numero, Bairro, PontoRef, Email, Telefone, Senha) VALUES (?,?,?,?,?,?,?,?,?)`,
-                    [req.body.Nome, req.body.CEP, req.body.Logradouro, req.body.Numero, req.body.Bairro, req.body.PontoRef, req.body.Email, req.body.Telefone, hash],
+                    conn.query(`INSERT INTO Cliente (Nome, Email, Telefone, Senha) VALUES (?,?,?,?)`,
+                    [req.body.Nome, req.body.Email, req.body.Telefone, hash],
                     (error, results) =>{
                         conn.release();
                         if (error) { return res.status(500).send({ error: error })}
@@ -115,6 +145,7 @@ router.patch('/:CodCliente', (req, res, next) => {
     })
 });
 
+<<<<<<< HEAD
 // DELETA UM CLIENTE
 router.delete('/:CodCliente', (req, res, next) =>{
     mysql.getConnection((error, conn) =>{
@@ -132,3 +163,6 @@ router.delete('/:CodCliente', (req, res, next) =>{
 });
 
 module.exports = router;
+=======
+module.exports = router;
+>>>>>>> 1f1d67c99379199ea36ac94b64495314ab5b363c
