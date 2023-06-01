@@ -145,7 +145,6 @@ router.patch('/:CodCliente', (req, res, next) => {
     })
 });
 
-<<<<<<< HEAD
 // DELETA UM CLIENTE
 router.delete('/:CodCliente', (req, res, next) =>{
     mysql.getConnection((error, conn) =>{
@@ -163,6 +162,3 @@ router.delete('/:CodCliente', (req, res, next) =>{
 });
 
 module.exports = router;
-=======
-module.exports = router;
->>>>>>> 1f1d67c99379199ea36ac94b64495314ab5b363c
