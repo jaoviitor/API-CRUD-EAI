@@ -36,36 +36,6 @@ router.get('/:CodCliente', (req, res, next) =>{
     })
 });
 
-router.get('/indexlogado', (req, res, next) => {
-    mysql.getConnection((error, conn) =>{
-        if(error){ return res.status(500).send({ error: error }) };
-        conn.query(
-            'SELECT * FROM Cliente;',
-            (error, resultado, fields) =>{
-                conn.release();
-                if(error){ return res.status(500).send({ error: error }) };
-                return res.status(200).send({response: resultado});
-            }
-        )
-    })
-    
-});
-
-router.get('/robodesinfeccaologado', (req, res, next) => {
-    mysql.getConnection((error, conn) =>{
-        if(error){ return res.status(500).send({ error: error }) };
-        conn.query(
-            'SELECT * FROM Cliente;',
-            (error, resultado, fields) =>{
-                conn.release();
-                if(error){ return res.status(500).send({ error: error }) };
-                return res.status(200).send({response: resultado});
-            }
-        )
-    })
-    
-});
-
 // CADASTRA UM CLIENTE NOVO
 router.post('/cadastro', (req, res, next) => {
     mysql.getConnection((error, conn) =>{
