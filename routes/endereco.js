@@ -4,6 +4,37 @@ const mysql = require('../mysql').pool;
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+// RETORNA TODOS OS ENDEREÇOS
+router.get('/', (req, res, next) =>{
+    mysql.getConnection((error, conn) =>{
+        if(error){ return res.status(500).send({ error: error }) };
+        conn.query(
+            'SELECT * FROM Endereco;',
+            (error, resultado, fields) =>{
+                conn.release();
+                if(error){ return res.status(500).send({ error: error }) };
+                return res.status(200).send({response: resultado});
+            }
+        )
+    })
+});
+
+// RETORNA UM ENDEREÇO ESPECIFICO
+router.get('/:CodCliente', (req, res, next) =>{
+    mysql.getConnection((error, conn) =>{
+        if(error){ return res.status(500).send({ error: error }) };
+        conn.query(
+            'SELECT * FROM Endereco WHERE CodCliente = ?;',
+            [req.params.CodCliente],
+            (error, resultado, fields) =>{
+                conn.release();
+                if(error){ return res.status(500).send({ error: error }) };
+                return res.status(200).send({response: resultado});
+            }
+        )
+    })
+});
+
 // ADICIONA ENDEREÇO
 router.post('/:CodCliente', (req, res, next) => {
     mysql.getConnection((error, conn) =>{
