@@ -17,6 +17,8 @@ CREATE TABLE Endereco(IdEndereco INT PRIMARY KEY AUTO_INCREMENT,
                       Logradouro VARCHAR(60) NOT NULL,
                       Numero VARCHAR(6) NOT NULL,
                       Bairro VARCHAR(40) NOT NULL,
+                      Cidade VARCHAR(40) NOT NULL,
+                      UF CHAR(2) NOT NULL,
                       Ponto_ref VARCHAR(40) NULL,
                       CodCliente INT,
                       FOREIGN KEY(CodCliente) REFERENCES Cliente(CodCliente));
