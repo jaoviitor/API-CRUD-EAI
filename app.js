@@ -8,6 +8,7 @@ const rotaEmpresa = require('./routes/empresa');
 const rotaFuncionario = require('./routes/funcionario');
 const rotaAgendamento = require('./routes/agendamento');
 const rotaCliente = require('./routes/cliente');
+const rotaEndereco = require('./routes/endereco');
 
 app.use(cors());
 app.use(morgan('dev'));
@@ -29,6 +30,7 @@ app.use('/empresa', rotaEmpresa);
 app.use('/funcionario', rotaFuncionario);
 app.use('/agendamento', rotaAgendamento);
 app.use('/cliente', rotaCliente);
+app.use('/endereco', rotaEndereco);
 
 //TRATAMENTO PARA QUANDO NÃO FOR ENCONTRADO UMA ROTA
 app.use((req, res, next) =>{
