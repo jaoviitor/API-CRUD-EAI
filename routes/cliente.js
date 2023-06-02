@@ -62,6 +62,24 @@ router.post('/cadastro', (req, res, next) => {
     })
 });
 
+// INSERIR ENDEREÇO
+router.post('/:CodCliente', (req, res, next) => {
+    mysql.getConnection((error, conn) =>{
+        if(error){ return res.status(500).send({ error: error }) };
+        conn.query(
+            'INSERT INTO Endereco (CEP, Logradouro, Numero, Bairro, Ponto_ref, CodCliente) VALUES (?,?,?,?,?,?)',
+            [req.body.CEP, req.body.Logradouro, req.body.Numero, req.body.Bairro, req.body.Ponto_ref, req.params.CodCliente],
+            (error, resultado, fields) => {
+                conn.release();
+                if(error){ return res.status(500).send({ error: error }) };
+                res.status(202).send({
+                    mensagem: 'Endereço adicionado com sucesso!',
+                });
+            }
+        )
+    })
+});
+
 // LOGIN DO CLIENTE
 router.post('/login', (req, res, next) => {
     mysql.getConnection((error, conn) =>{
