@@ -12,6 +12,15 @@ CREATE TABLE Cliente(CodCliente INT PRIMARY KEY AUTO_INCREMENT,
                      Telefone VARCHAR(12) NOT NULL,
                      Senha VARCHAR(256)) AUTO_INCREMENT = 10000;
 
+CREATE TABLE Endereco(IdEndereco INT PRIMARY KEY AUTO_INCREMENT,
+                      CEP CHAR(8) NOT NULL,
+                      Logradouro VARCHAR(60) NOT NULL,
+                      Numero VARCHAR(6) NOT NULL,
+                      Bairro VARCHAR(40) NOT NULL,
+                      Ponto_ref VARCHAR(40) NULL,
+                      CodCliente INT,
+                      FOREIGN KEY(CodCliente) REFERENCES Cliente(CodCliente));
+
 CREATE TABLE Empresa(CodEmpresa INT PRIMARY KEY AUTO_INCREMENT,
                      Situacao VARCHAR(12) NOT NULL,
 					 CNPJ VARCHAR(14) NOT NULL,
