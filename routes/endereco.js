@@ -53,7 +53,7 @@ router.post('/:CodCliente', (req, res, next) => {
     })
 });
 
-// ALTERA AS INFORMAÇÕES DE UM CLIENTE
+// ALTERA UM ENDEREÇO
 router.patch('/:CodCliente', (req, res, next) => {
     mysql.getConnection((error, conn) =>{
         if(error){ return res.status(500).send({ error: error }) };
