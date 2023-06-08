@@ -3,7 +3,7 @@ const router = express.Router();
 const mysql = require('../mysql').pool;
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const login = require('../middleware/login')
+const login = require('../middleware/login');
 
 
 // RETORNA TODOS OS CLIENTES
@@ -100,7 +100,7 @@ router.post('/login', (req, res, next) => {
 
 
 // ALTERA AS INFORMAÇÕES DE UM CLIENTE
-router.patch('/:CodCliente', (req, res, next) => {
+router.patch('/:CodCliente', login, (req, res, next) => {
     mysql.getConnection((error, conn) =>{
         if(error){ return res.status(500).send({ error: error }) };
         conn.query(
