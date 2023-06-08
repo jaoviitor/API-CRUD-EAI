@@ -3,11 +3,6 @@ USE mvpeai_eai;
 
 CREATE TABLE Cliente(CodCliente INT PRIMARY KEY AUTO_INCREMENT,
 					 Nome VARCHAR(50) NOT NULL,
-                     CEP CHAR(8) NOT NULL,
-                     Logradouro VARCHAR(60) NOT NULL,
-                     Numero VARCHAR(6) NOT NULL,
-                     Bairro VARCHAR(40) NOT NULL,
-                     Ponto_ref VARCHAR(40) NULL,
                      Email VARCHAR(50) NOT NULL,
                      Telefone VARCHAR(12) NOT NULL,
                      Senha VARCHAR(256)) AUTO_INCREMENT = 10000;
