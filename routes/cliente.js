@@ -48,8 +48,8 @@ router.post('/cadastro', (req, res, next) => {
             } else{
                 bcrypt.hash(req.body.Senha, 10, (errBcrypt, hash) =>{
                     if (errBcrypt) { return res.status(500).send({ error: errBcrypt }) }
-                    conn.query(`INSERT INTO Cliente (Nome, Email, Telefone, Senha) VALUES (?,?,?,?)`,
-                    [req.body.Nome, req.body.Email, req.body.Telefone, hash],
+                    conn.query(`INSERT INTO Cliente (Nome, CPForCNPJ, Email, Telefone, Senha) VALUES (?,?,?,?,?)`,
+                    [req.body.Nome, req.body.CPForCNPJ, req.body.Email, req.body.Telefone, hash],
                     (error, results) =>{
                         conn.release();
                         if (error) { return res.status(500).send({ error: error })}
