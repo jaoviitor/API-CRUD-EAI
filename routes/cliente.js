@@ -80,6 +80,7 @@ router.post('/login', (req, res, next) => {
                 if (result) {
                     const token = jwt.sign({
                         CodCliente: results[0].CodCliente,
+                        Nome: results[0].Nome,
                         Email: results[0].Email
                     }, process.env.JWT_KEY,
                     {
