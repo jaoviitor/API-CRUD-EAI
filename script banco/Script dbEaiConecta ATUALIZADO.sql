@@ -2,6 +2,7 @@ USE mvpeai_eai;
 
 
 CREATE TABLE Cliente(CodCliente INT PRIMARY KEY AUTO_INCREMENT,
+                     CPForCNPJ VARCHAR(14) NOT NULL,
 					 Nome VARCHAR(50) NOT NULL,
                      Email VARCHAR(50) NOT NULL,
                      Telefone VARCHAR(12) NOT NULL,

@@ -5,7 +5,16 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv').config();
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' })
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb){
+        cb(null, './uploads/');
+    },
+    filename: function(req, file, cb){
+        cb(null, new Date().toISOString() + file.originalname);
+    }
+})
+const upload = multer({ storage: storage });
 
 //CADASTRA UM NOVO FUNCIONÁRIO DA EMPRESA NO BANCO
 router.post('/cadastro', upload.single('imagem_funcionario'), (req, res, next) => {
