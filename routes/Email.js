@@ -9,7 +9,7 @@ router.post('/contato', (req, res, error, next) =>{
     console.log(req.body.Email);
     console.log(req.body.Subject);
     console.log(req.body.Message);
-    
+
     const transporter = nodemailer.createTransport({
         host: process.env.HOST_MAIL,
         port: process.env.HOST_PORT,
@@ -19,16 +19,16 @@ router.post('/contato', (req, res, error, next) =>{
         }
     });
     const sender = {
-        name: req.body.Nome,
-        email: process.env.HOST_USER
+        name: 'Contato',
+        email: 'sender.eai@outlook.com'
     }
     const receiver = {
         email: 'contato@mvp.eai.tec.br'
     }
     const mailContent = {
         subject: `${req.body.Subject}`,
-        text: `${req.body.Message}`,
-        html: `<p>${req.body.Message}</p>`
+        text: `Email enviado por: ${req.body.Nome}. Mensagem: ${req.body.Message}`,
+        html: `<p>Email enviado por: ${req.body.Nome}<br>Email: ${req.body.Email}<br>Mensagem: ${req.body.Message}</p>`
     }
 
     async function sendMail(transporter, sender, receiver, mailContent){
