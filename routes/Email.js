@@ -4,7 +4,7 @@ const dotenv = require('dotenv').config();
 const nodemailer = require('nodemailer');
 
 //ENVIA EMAIL PARA CONTATO
-router.post('/contato', (req, res, error, next) =>{
+router.post('/contato', (req, res, next) =>{
     console.log(req.body.Nome);
     console.log(req.body.Email);
     console.log(req.body.Subject);
@@ -46,17 +46,17 @@ router.post('/contato', (req, res, error, next) =>{
     async function mail(){
         try{
             await sendMail(transporter, sender, receiver, mailContent);
+            res.status(201).send({
+                mensagem: 'Operação realizada com sucesso!'
+            })
         } catch(error){
-            console.log(error);
+            return res.status(500).send({ error: error })
         }
     }
 
     mail();
 
-    if (error) { return res.status(500).send({ error: error })}
-    res.status(201).send({
-        mensagem: 'Operação realizada com sucesso!'
-    })
+    
 })
 
 module.exports = router;
