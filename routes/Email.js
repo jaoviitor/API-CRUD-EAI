@@ -21,8 +21,8 @@ router.post('/contato', (req, res, next) =>{
         email: 'contato@mvp.eai.tec.br'
     }
     const mailContent = {
-        subject: req.body.Subject,
-        text: req.body.Message,
+        subject: `${req.body.Subject}`,
+        text: `${req.body.Message}`,
         html: `<p>${req.body.Message}</p>`
     }
 
