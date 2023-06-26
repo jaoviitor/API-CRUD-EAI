@@ -5,11 +5,6 @@ const nodemailer = require('nodemailer');
 
 //ENVIA EMAIL PARA CONTATO
 router.post('/contato', (req, res, next) =>{
-    console.log(req.body.Nome);
-    console.log(req.body.Email);
-    console.log(req.body.Subject);
-    console.log(req.body.Message);
-
     const transporter = nodemailer.createTransport({
         host: process.env.HOST_MAIL,
         port: process.env.HOST_PORT,
