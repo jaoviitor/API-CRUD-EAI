@@ -4,7 +4,7 @@ const dotenv = require('dotenv').config();
 const nodemailer = require('nodemailer');
 
 //ENVIA EMAIL PARA CONTATO
-router.post('/contato', (req, res, next) =>{
+router.post('/contato', (req, res, error, next) =>{
     const transporter = nodemailer.createTransport({
         host: process.env.HOST_MAIL,
         port: process.env.HOST_PORT,
