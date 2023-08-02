@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv').config();
 const login = require('../middleware/login');
+const gerarToken = require('../functions/keyGenerator');
 
 //RETORNA AS EMPRESAS CADASTRADAS
 router.get('/', (req, res, next) => {
@@ -24,6 +25,8 @@ router.get('/', (req, res, next) => {
 
 //CADASTRA UMA NOVA EMPRESA NO BANCO
 router.post('/cadastro', (req, res, next) => {
+    const tamanhoToken = 6;
+    const token = gerarToken(tamanhoToken);
     mysql.getConnection((error, conn) =>{
         if(error){ return res.status(500).send({ error: error }) };
         conn.query('SELECT * FROM Empresa WHERE Email = ?', [req.body.Email], (error, results) =>{
@@ -33,8 +36,8 @@ router.post('/cadastro', (req, res, next) => {
             } else{
                 bcrypt.hash(req.body.Senha, 10, (errBcrypt, hash) =>{
                     if (errBcrypt) { return res.status(500).send({ error: errBcrypt }) }
-                    conn.query(`INSERT INTO Empresa (Situacao, CNPJ, Nome_empresarial, Nome_fantasia, Porte, CEP, Logradouro, Numero, Complemento, Bairro, Municipio, UF, Telefone, Email, Senha) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
-                    [req.body.Situacao, req.body.CNPJ, req.body.Nome_empresarial, req.body.Nome_fantasia, req.body.Porte, req.body.CEP, req.body.Logradouro, req.body.Numero, req.body.Complemento, req.body.Bairro, req.body.Municipio, req.body.UF, req.body.Telefone, req.body.Email, hash],
+                    conn.query(`INSERT INTO Empresa (Situacao, CNPJ, Nome_empresarial, Nome_fantasia, Porte, CEP, Logradouro, Numero, Complemento, Bairro, Municipio, UF, Telefone, Email, Senha, tokenVerificacao) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+                    [req.body.Situacao, req.body.CNPJ, req.body.Nome_empresarial, req.body.Nome_fantasia, req.body.Porte, req.body.CEP, req.body.Logradouro, req.body.Numero, req.body.Complemento, req.body.Bairro, req.body.Municipio, req.body.UF, req.body.Telefone, req.body.Email, hash, token],
                     (error, results) =>{
                         conn.release();
                         if (error) { return res.status(500).send({ error: error })}
