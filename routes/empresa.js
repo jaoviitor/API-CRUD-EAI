@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv').config();
 const login = require('../middleware/login');
 const gerarToken = require('../functions/keyGenerator');
+const nodemailer = require('nodemailer');
 
 //RETORNA AS EMPRESAS CADASTRADAS
 router.get('/', (req, res, next) => {
@@ -41,6 +42,48 @@ router.post('/cadastro', (req, res, next) => {
                     (error, results) =>{
                         conn.release();
                         if (error) { return res.status(500).send({ error: error })}
+                        const transporter = nodemailer.createTransport({
+                            host: process.env.HOST_MAIL,
+                            port: process.env.HOST_PORT,
+                            auth: {
+                                user: process.env.HOST_USER,
+                                pass: process.env.HOST_PASS
+                            }
+                        });
+                        const sender = {
+                            name: 'Contato',
+                            email: 'sender.eai@outlook.com'
+                        }
+                        const receiver = {
+                            email: `${req.body.email}`
+                        }
+                        const mailContent = {
+                            subject: 'Verifique sua conta',
+                            text: `Valide sua conta informando o o token: ${token}`,
+                            html: `<p>Valide sua conta informando o o token: ${token}</p>`
+                        }
+                        async function sendMail(transporter, sender, receiver, mailContent){
+                            const mail = await transporter.sendMail({
+                                from: `"${sender.name}" ${sender.email}`,
+                                to: `${receiver.email}`,
+                                subject: `${mailContent.subject}`,
+                                text: `${mailContent.text}`,
+                                html: `${mailContent.html}`
+                            });
+                            console.log('Email enviado: ', mail.messageId);
+                            console.log('URL do Ethereal: ', nodemailer.getTestMessageUrl(mail));
+                        }
+                        async function mail(){
+                            try{
+                                await sendMail(transporter, sender, receiver, mailContent);
+                                res.status(201).send({
+                                    mensagem: 'Operação realizada com sucesso!'
+                                })
+                            } catch(error){
+                                return res.status(500).send({ error: error })
+                            }
+                        }
+                        mail();
                         res.status(201).send({
                             mensagem: 'Empresa cadastrada com sucesso!'
                         })
