@@ -7,6 +7,7 @@ const dotenv = require('dotenv').config();
 const login = require('../middleware/login');
 const gerarToken = require('../functions/keyGenerator');
 const nodemailer = require('nodemailer');
+const { token } = require('morgan');
 
 //RETORNA AS EMPRESAS CADASTRADAS
 router.get('/', (req, res, next) => {
@@ -28,6 +29,7 @@ router.get('/', (req, res, next) => {
 router.post('/cadastro', (req, res, next) => {
     const tamanhoToken = 6;
     const token = gerarToken(tamanhoToken);
+    const linkAtivacao = `https://eaiconecta.onrender.com/empresa/ativacao/${token}`
     mysql.getConnection((error, conn) =>{
         if(error){ return res.status(500).send({ error: error }) };
         conn.query('SELECT * FROM Empresa WHERE Email = ?', [req.body.Email], (error, results) =>{
@@ -59,8 +61,8 @@ router.post('/cadastro', (req, res, next) => {
                         }
                         const mailContent = {
                             subject: 'Verifique sua conta',
-                            text: `Valide sua conta informando o o token: ${token}`,
-                            html: `<p>Valide sua conta informando o o token: ${token}</p>`
+                            text: `Valide sua conta acessando o link: ${linkAtivacao}`,
+                            html: `<p>Valide sua conta acessando o link: ${linkAtivacao}</p>`
                         }
                         async function sendMail(transporter, sender, receiver, mailContent){
                             const mail = await transporter.sendMail({
@@ -93,6 +95,8 @@ router.post('/cadastro', (req, res, next) => {
         })
     })
 });
+
+
 
 router.post('/login', (req, res, next) =>{
     mysql.getConnection((error, conn) =>{
@@ -131,6 +135,30 @@ router.post('/login', (req, res, next) =>{
     })
 })
 
+router.get('/ativacao/:token', (req, res, next) =>{
+    mysql.getConnection((error, conn) =>{
+        if(error){ return res.status(500).send({ error: error }) };
+        conn.query(
+            'SELECT * FROM Empresa WHERE tokenVerificacao = ?;',
+            [req.params.token],
+            (error, resultado, fields) =>{
+                conn.release();
+                if(error){ return res.status(500).send({ error: error }) };
+                if (resultado.length < 1){ //conferindo se o email está no banco
+                    return res.status(401).send({ mensagem: 'Falha na autenticação' });
+                }
+                conn.query(
+                    'UPDATE Empresa SET verificacao = 1 WHERE tokenVerificacao = ?',
+                    [req.params.token],
+                    (error, result) =>{
+                        conn.release();
+                        if(error){ return res.status(500).send({ error: error }) };
+                    })
+                return res.status(200).send({response: resultado});
+            }
+        )
+    })
+});
 
 //criar variácel com o id da empresa logada para fazer o get, pode pegar do token
 
