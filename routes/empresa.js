@@ -55,7 +55,7 @@ router.post('/cadastro', (req, res, next) => {
                             email: 'sender.eai@outlook.com'
                         }
                         const receiver = {
-                            email: `${req.body.email}`
+                            email: `${req.body.Email}`
                         }
                         const mailContent = {
                             subject: 'Verifique sua conta',
