@@ -62,7 +62,91 @@ router.post('/cadastro', (req, res, next) => {
                         const mailContent = {
                             subject: 'Verifique sua conta',
                             text: `Valide sua conta acessando o link: ${linkAtivacao}`,
-                            html: `<p>Valide sua conta acessando o link: ${linkAtivacao}</p>`
+                            html: `<!DOCTYPE html>
+                            <html lang="pt-br">
+                            <head>
+                                <meta charset="UTF-8">
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                <title>Document</title>
+                                <style>
+                                    @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
+                                    body {
+                                        margin: 0;
+                                        padding: 0;
+                                        font-family: Arial, sans-serif;
+                                        background-color: #f5f5f5;
+                                    }
+                            
+                                    .container {
+                                        max-width: 600px;
+                                        margin: 0 auto;
+                                        background-color: #ffffff;
+                                        border-radius: 5px;
+                                        padding: 20px;
+                                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                                    }
+                            
+                                    .header {
+                                        text-align: center;
+                                        padding: 20px 0;
+                                        background-color: #F34E15;
+                                        color: #ffffff;
+                                        border-radius: 5px 5px 0 0;
+                                    }
+                            
+                                    .logo {
+                                        display: block;
+                                        margin: 0 auto;
+                                        max-width: 200px;
+                                    }
+                            
+                                    .welcome-message {
+                                        font-family: 'Baloo 2', cursive;
+                                        text-align: center;
+                                        padding: 20px 0;
+                                    }
+                            
+                                    .validation-text {
+                                        text-align: center;
+                                        padding: 20px 0;
+                                        background-color: #f2f2f2;
+                                    }
+                            
+                                    .validate-button-container {
+                                        text-align: center;
+                                        padding-top: 20px;
+                                    }
+                            
+                                    .validate-button {
+                                        display: inline-block;
+                                        background-color: #F34E15;
+                                        color: #ffffff;
+                                        padding: 10px 20px;
+                                        text-decoration: none;
+                                        border-radius: 5px;
+                                    }
+                                </style>
+                            </head>
+                            <body>
+                                <div class="container">
+                                    <!-- Área de Bem-Vindo -->
+                                    <div class="header">
+                                        <img class="logo" src="https://cdn.discordapp.com/attachments/1030689922681688175/1137001336328683520/image.png" alt="Logo da Minha Empresa">
+                                    </div>
+                                    <div class="welcome-message">
+                                        <h1>Bem-vindo ao e.Aí Conecta</h1>
+                                    </div>
+                            
+                                    <!-- Área de Validação da Conta -->
+                                    <div class="validation-text">
+                                        <p>Para validar a sua conta, clique no botão abaixo:</p>
+                                    </div>
+                                    <div class="validate-button-container">
+                                        <a href="https://eaiconecta.onrender.com/empresa/ativacao/${token}" class="validate-button" style="text-decoration: none; color: #ffffff;">Valide Agora</a>
+                                    </div>
+                                </div>
+                            </body>
+                            </html>`
                         }
                         async function sendMail(transporter, sender, receiver, mailContent){
                             const mail = await transporter.sendMail({
