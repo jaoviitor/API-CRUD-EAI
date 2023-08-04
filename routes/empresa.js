@@ -86,9 +86,6 @@ router.post('/cadastro', (req, res, next) => {
                             }
                         }
                         mail();
-                        res.status(201).send({
-                            mensagem: 'Empresa cadastrada com sucesso!'
-                        })
                     })
                 })
             }
