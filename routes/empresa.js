@@ -207,6 +207,8 @@ router.post('/login', (req, res, next) =>{
                         mensagem: 'Autenticado com sucesso',
 						CodEmpresa: results[0].CodEmpresa,
 						Nome_fantasia: results[0].Nome_fantasia,
+                        verificacaoContrato: results[0].verificacaoContrato,
+                        Verificacao: results[0].Verificacao,
                         token: token
                     });
                 }
